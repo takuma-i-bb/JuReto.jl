@@ -1,0 +1,3 @@
+[deps]
+Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
+JuReto = "7fe6cc6a-1977-40c0-8c64-97f76df8bbe5"
