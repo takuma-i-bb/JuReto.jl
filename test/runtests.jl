@@ -28,4 +28,6 @@ end
     x1, x2 = Variable.(rand(2))
     y = x1 + x2
     @test y.data == x1.data + x2.data
+    backward(y)
+    @test (x1.grad, x2.grad) == (1.0, 1.0)
 end
