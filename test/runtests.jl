@@ -23,3 +23,9 @@ end
     backward(y)
     @test isapprox(x.grad, numerical_diff(Exp(), x)) 
 end
+
+@testset "+" begin
+    x1, x2 = Variable.(rand(2))
+    y = x1 + x2
+    @test y.data == x1.data + x2.data
+end
