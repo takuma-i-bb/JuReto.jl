@@ -1,13 +1,29 @@
 using JuReto
 using Test
 
+@testset "Config" begin
+    x = Variable(1.0)
+    y = no_grad() do 
+        y = x|>square|>square
+    end
+    @test y.data == 1.0
+    @test y.creator === nothing
+    y = x|>square|>square
+    @test isa(y.creator, JuReto.MyFunction)
+end
+
 @testset "Variable" begin
     x = Variable(0.5)
     y = square(x)
     backward!(y)
+    @test x.data == 0.5
     @test x.grad !== nothing
+    @test y.grad === nothing
     init_grad!(x)
     @test x.grad === nothing
+    backward!(y, retain_grad=true)
+    @test x.grad !== nothing
+    @test y.grad == 1.0
 end
 
 @testset "square" begin
