@@ -59,6 +59,13 @@ end
     y = x1 + x2 + x1
     backward!(y)
     @test (x1.grad, x2.grad) == (2.0, 1.0)
+    
+    x1, x2 = Variable.(rand(2))
+    x3 = rand()
+    y = x1 + x2 + x3
+    @test y.data == x1.data + x2.data + x3
+    backward!(y)
+    @test (x1.grad, x2.grad) == (1.0, 1.0) 
 end
 
 @testset "*" begin
@@ -71,5 +78,12 @@ end
     y = x1 * x2 * x1
     backward!(y)
     @test (x1.grad, x2.grad) == (2x1.data*x2.data, x1.data^2)
+
+    x1, x2 = Variable.(rand(2))
+    x3 = rand()
+    y = x1 * x2 * x3
+    @test y.data == x1.data * x2.data * x3
+    backward!(y)
+    @test (x1.grad, x2.grad) == (x2.data*x3, x1.data*x3) 
 end
 
