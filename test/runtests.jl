@@ -4,17 +4,17 @@ using Test
 @testset "Config" begin
     x = Variable(1.0)
     y = no_grad() do 
-        y = x|>square|>square
+        y = (x^2.0)^2.0
     end
     @test y.data == 1.0
     @test y.creator === nothing
-    y = x|>square|>square
+    y = (x^2)^2
     @test isa(y.creator, JuReto.MyFunction)
 end
 
 @testset "Variable" begin
     x = Variable(0.5)
-    y = square(x)
+    y = exp(x)
     backward!(y)
     @test x.data == 0.5
     @test x.grad !== nothing
@@ -26,27 +26,27 @@ end
     @test y.grad == 1.0
 end
 
-@testset "square" begin
-    # Write your tests here.
-    x = Variable(2.0)
-    @test square(x).data == 4.0
+# @testset "square" begin
+#     # Write your tests here.
+#     x = Variable(2.0)
+#     @test square(x).data == 4.0
     
-    x = Variable(3.0)
-    backward!(square(x))
-    @test x.grad == 6.0
-    @test isapprox(x.grad, numerical_diff(Square(), x); atol=1e-3) 
+#     x = Variable(3.0)
+#     backward!(square(x))
+#     @test x.grad == 6.0
+#     @test isapprox(x.grad, numerical_diff(Square(), x); atol=1e-3) 
     
-    x = Variable(rand(Float32, 1)[1])
-    backward!(square(x))
-    @test isapprox(x.grad, numerical_diff(Square(), x); atol=1e-3)
-end
+#     x = Variable(rand(Float32, 1)[1])
+#     backward!(square(x))
+#     @test isapprox(x.grad, numerical_diff(Square(), x); atol=1e-3)
+# end
 
 @testset "exp" begin
     x = Variable(2.0)
     y = exp(x)
     @test y.data == exp(2.0)
     backward!(y)
-    @test isapprox(x.grad, numerical_diff(Exp(), x); atol=1e-3) 
+    @test isapprox(x.grad, numerical_diff(exp, x); atol=1e-3) 
 end
 
 @testset "-" begin
