@@ -69,7 +69,8 @@ end
 
 function backward!(val::Variable; retain_grad=false)
     if val.grad === nothing
-        initial_grad = collect(val.data) |> similar |> (x->fill!(x, one(eltype(x)))) # 同一形状・データ型の1埋め配列
+        initial_grad = collect(val.data) |> similar |> (x->fill!(x, one(eltype(x)))) # 同一形状・Float32の1埋め配列
+        # initial_grad = Array{Float32}(undef, size(val.data)) # 勾配はFloat32に
         if ndims(initial_grad) == 0
             val.grad = initial_grad[1] # 0次元配列をスカラーに変更
         else

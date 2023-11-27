@@ -10,7 +10,7 @@ function modify_argument(func, arg_index, args)
     end
 end
 
-function numerical_diff(f, x::Variable, eps=1e-4)
+function numerical_diff(f, x::Variable, eps=1e-8)
     x0 = Variable(x.data - eps)
     x1 = Variable(x.data + eps)
     y0 = f(x0)
