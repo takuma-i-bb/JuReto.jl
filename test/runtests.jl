@@ -60,6 +60,7 @@ end
     backward!(y)
     @test (x1.grad, x2.grad) == (2.0, 1.0)
     
+    # 定数（not Variable）との和
     x1, x2 = Variable.(rand(2))
     x3 = rand()
     y = x1 + x2 + x3
@@ -78,7 +79,8 @@ end
     y = x1 * x2 * x1
     backward!(y)
     @test (x1.grad, x2.grad) == (2x1.data*x2.data, x1.data^2)
-
+    
+    # 定数（not Variable）との積
     x1, x2 = Variable.(rand(2))
     x3 = rand()
     y = x1 * x2 * x3
