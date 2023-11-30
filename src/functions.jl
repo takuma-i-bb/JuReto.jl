@@ -140,26 +140,46 @@ function backward(f::Div, dy)
     return dy / x2, -dy * x1 / x2^2
 end
 
-struct Pow <: MyFunction
+struct Pow{T<:Real} <: MyFunction
+    data::FunctionData
+    c::T
+end
+
+function Pow(c::Real)
+    Pow(FunctionData(), c)
+end
+
+struct Pow2 <: MyFunction
     data::FunctionData
 end
 
-function Pow()
-    Pow(FunctionData())
+function Pow2()
+    Pow2(FunctionData())
 end
 
 import Base:^
+^(x1::Union{Number, Variable}, x2::Real) = Pow(x2)(x1)
 function ^(x1::Variable, x2::Variable)
-    Pow()(x1, x2)
+    Pow2()(x1, x2)
 end
-^(x1::Union{Number, Variable}, x2::Union{Number, Variable}) = ^(promote(x1, x2)...)
+^(x1::Union{Number, Variable}, x2::Union{Variable}) = ^(promote(x1, x2)...)
 
-function forward(f::Pow, x1, x2)
-    y = x1^x2
+function forward(f::Pow, x1)
+    y = x1^f.c
     return (y,)
 end
 
 function backward(f::Pow, dy)
+    x1 = f.data.inputs[1].data
+    return f.c*x1^(f.c-1)*dy
+end
+
+function forward(f::Pow2, x1, x2)
+    y = x1^x2
+    return (y,)
+end
+
+function backward(f::Pow2, dy)
     x1, x2 = f.data.inputs[1].data, f.data.inputs[2].data
     return x2*x1^(x2-1)*dy, log(x1)*x1^x2*dy
 end
