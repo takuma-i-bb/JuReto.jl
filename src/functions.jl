@@ -46,6 +46,28 @@ function backward(f::Exp, dy)
     exp(x)*dy
 end
 
+struct Sin <:MyFunction
+    data::FunctionData
+end
+
+function Sin()
+    Sin(FunctionData())
+end
+
+import Base:sin
+function sin(x::Variable)
+    Sin()(x)
+end
+
+function forward(f::Sin, x)
+    (sin(x),)
+end
+
+function backward(f::Sin, dy)
+    x = f.data.inputs[1].data
+    dy * cos(x)
+end
+
 struct Add <: MyFunction
     data::FunctionData
 end
