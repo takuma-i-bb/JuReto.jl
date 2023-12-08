@@ -49,6 +49,14 @@ end
     @test isapprox(x.grad, numerical_diff(exp, x); atol=1e-3) 
 end
 
+@testset "sin" begin
+    x = Variable(randn())
+    y = sin(x)
+    @test y.data == sin(x.data)
+    backward!(y)
+    @test isapprox(x.grad, numerical_diff(sin, x); atol=1e-3)
+end
+
 @testset "-" begin
     x = Variable(2.0)
     y = -x
